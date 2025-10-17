@@ -47,6 +47,12 @@ Future<Response> addMember(RequestContext context) async {
       data['membershipNumber'] as String,
     );
 
+    if (member == null) {
+      return ApiResponse.badRequest(
+        'Membership number already exists',
+      );
+    }
+
     return ApiResponse.success(
       body: member.toJson(),
       statusCode: 201,

@@ -16,13 +16,22 @@ void main() {
         '123-456-789',
       );
 
-      expect(book.title, equals('Test Book'));
+      expect(book, isNotNull);
+      expect(book!.title, equals('Test Book'));
       expect(book.author, equals('Test Author'));
       expect(book.isbn, equals('123-456-789'));
       expect(book.isAvailable, isTrue);
 
       final retrieved = service.getBook(book.id);
       expect(retrieved, equals(book));
+    });
+
+    test('prevents duplicate ISBN', () {
+      final book1 = service.addBook('Book 1', 'Author 1', 'ISBN-123');
+      expect(book1, isNotNull);
+
+      final book2 = service.addBook('Book 2', 'Author 2', 'ISBN-123');
+      expect(book2, isNull);
     });
 
     test('deletes a book', () {
@@ -32,7 +41,7 @@ void main() {
         '123-456-789',
       );
 
-      expect(service.deleteBook(book.id), isTrue);
+      expect(service.deleteBook(book!.id), isTrue);
       expect(service.getBook(book.id), isNull);
     });
 
@@ -53,12 +62,21 @@ void main() {
         'M001',
       );
 
-      expect(member.name, equals('John Doe'));
+      expect(member, isNotNull);
+      expect(member!.name, equals('John Doe'));
       expect(member.email, equals('john@example.com'));
       expect(member.membershipNumber, equals('M001'));
 
       final retrieved = service.getMember(member.id);
       expect(retrieved, equals(member));
+    });
+
+    test('prevents duplicate membership number', () {
+      final member1 = service.addMember('Member 1', 'email1@test.com', 'M001');
+      expect(member1, isNotNull);
+
+      final member2 = service.addMember('Member 2', 'email2@test.com', 'M001');
+      expect(member2, isNull);
     });
 
     test('deletes a member', () {
@@ -68,7 +86,7 @@ void main() {
         'M001',
       );
 
-      expect(service.deleteMember(member.id), isTrue);
+      expect(service.deleteMember(member!.id), isTrue);
       expect(service.getMember(member.id), isNull);
     });
 
@@ -89,8 +107,8 @@ void main() {
       final book = service.addBook('Test Book', 'Test Author', 'ISBN');
       final member =
           service.addMember('Test Member', 'test@example.com', 'M001');
-      bookId = book.id;
-      memberId = member.id;
+      bookId = book!.id;
+      memberId = member!.id;
     });
 
     test('creates and retrieves a loan', () {
@@ -131,7 +149,7 @@ void main() {
     test('lists all loans', () {
       final book2 = service.addBook('Book 2', 'Author 2', 'ISBN2');
       final loan1 = service.createLoan(bookId, memberId);
-      final loan2 = service.createLoan(book2.id, memberId);
+      final loan2 = service.createLoan(book2!.id, memberId);
 
       final loans = service.getAllLoans();
       expect(loans, containsAll([loan1, loan2]));

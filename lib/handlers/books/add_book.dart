@@ -47,6 +47,12 @@ Future<Response> addBook(RequestContext context) async {
       data['isbn'] as String,
     );
 
+    if (book == null) {
+      return ApiResponse.badRequest(
+        'ISBN already exists',
+      );
+    }
+
     return ApiResponse.success(
       body: book.toJson(),
       statusCode: 201,

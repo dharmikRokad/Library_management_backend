@@ -20,11 +20,24 @@ class LibraryService {
   /// Returns null if no book is found with the given [id].
   Book? getBook(String id) => _books[id];
 
+  /// Checks if an ISBN already exists.
+  ///
+  /// Returns true if the [isbn] is already in use.
+  bool isbnExists(String isbn) {
+    return _books.values.any((book) => book.isbn == isbn);
+  }
+
   /// Adds a new book to the library.
   ///
   /// Takes [title], [author], and [isbn] as parameters and returns
   /// the newly created [Book] instance with a generated UUID.
-  Book addBook(String title, String author, String isbn) {
+  /// Returns null if the ISBN already exists.
+  Book? addBook(String title, String author, String isbn) {
+    // Check if ISBN already exists
+    if (isbnExists(isbn)) {
+      return null;
+    }
+
     final book = Book(
       id: _uuid.v4(),
       title: title,
@@ -53,11 +66,25 @@ class LibraryService {
   /// Returns null if no member is found with the given [id].
   Member? getMember(String id) => _members[id];
 
+  /// Checks if a membership number already exists.
+  ///
+  /// Returns true if the [membershipNumber] is already in use.
+  bool membershipNumberExists(String membershipNumber) {
+    return _members.values
+        .any((member) => member.membershipNumber == membershipNumber);
+  }
+
   /// Adds a new member to the library.
   ///
   /// Takes [name], [email], and [membershipNumber] as parameters and returns
   /// the newly created [Member] instance with a generated UUID.
-  Member addMember(String name, String email, String membershipNumber) {
+  /// Returns null if the membership number already exists.
+  Member? addMember(String name, String email, String membershipNumber) {
+    // Check if membership number already exists
+    if (membershipNumberExists(membershipNumber)) {
+      return null;
+    }
+
     final member = Member(
       id: _uuid.v4(),
       name: name,
